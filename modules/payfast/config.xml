@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+config.xml
+
+Copyright (c) 2010-2011 PayFast (Pty) Ltd
+ 
+LICENSE:
+ 
+This payment module is free software; you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published
+by the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+ 
+This payment module is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+License for more details.
+
+@author		Jonathan Page
+@copyright  2010-2011 PayFast (Pty) Ltd
+@license    http://www.opensource.org/licenses/lgpl-license.php LGPL
+@link       http://www.payfast.co.za/help/cube_cart
+@category   PayFast
+@package    PayFast_PayFast
+-->
+<module>
+	<name>payfast</name>
+	<displayName>PayFast</displayName>
+	<version>1</version>
+	<description>Accept payments by credit card, EFT and cash from both local and international buyers, quickly and securely with PayFast.</description>
+	<author>PayFast</author>
+	<tab>payments_gateways</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
