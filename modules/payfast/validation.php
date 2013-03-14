@@ -145,6 +145,10 @@ if( ( $_GET['itn_request'] == 'true' ) )
 
         $sessionid = $pfData['custom_str1'];
         $transaction_id = $pfData['pf_payment_id'];
+        
+        if (empty(Context::getContext()->link))
+        Context::getContext()->link = new Link();
+
 
 		switch( $pfData['payment_status'] )
         {
