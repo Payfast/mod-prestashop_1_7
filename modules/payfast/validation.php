@@ -149,7 +149,6 @@ if( ( $_GET['itn_request'] == 'true' ) )
         if (empty(Context::getContext()->link))
         Context::getContext()->link = new Link();
 
-
 		switch( $pfData['payment_status'] )
         {
             case 'COMPLETE':
