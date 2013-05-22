@@ -28,7 +28,7 @@ define('SANDBOX_MERCHANT_KEY', '46f0cd694581a');
 
 
 if (!defined('_CAN_LOAD_FILES_'))
-	exit;
+  exit;
 
 /**
  * PayFast
@@ -47,18 +47,18 @@ class PayFast extends PaymentModule
         $this->name = 'payfast';
         $this->tab = 'payments_gateways';
         $this->version = 1.0;
-		$this->author = 'PayFast';
-		
-		$this->currencies = true;
-		$this->currencies_mode = 'radio';
+    $this->author = 'PayFast';
+    
+    $this->currencies = true;
+    $this->currencies_mode = 'radio';
 
         parent::__construct();
 
         $this->displayName = $this->l('PayFast');
         $this->description = $this->l('Accept payments by credit card, EFT and cash from both local and international buyers, quickly and securely with PayFast.');
-		
-		if (!sizeof(Currency::checkPaymentCurrencies($this->id)))
-			$this->warning = $this->l('No currency set for this module');
+    
+    if (!sizeof(Currency::checkPaymentCurrencies($this->id)))
+      $this->warning = $this->l('No currency set for this module');
     }
 
     /**
@@ -67,11 +67,11 @@ class PayFast extends PaymentModule
      * Installs module
      */
     function install()
-    {		
+    {   
         if (!parent::install() OR !$this->registerHook('payment') OR !$this->registerHook('paymentReturn') OR !Configuration::updateValue('PAYFAST_MERCHANT_ID', '') 
-		OR !Configuration::updateValue('PAYFAST_MERCHANT_KEY', '') OR !Configuration::updateValue('PAYFAST_LOGS', '1') OR !Configuration::updateValue('PAYFAST_MODE', 'test'))
-			return false;
-		return true;
+    OR !Configuration::updateValue('PAYFAST_MERCHANT_KEY', '') OR !Configuration::updateValue('PAYFAST_LOGS', '1') OR !Configuration::updateValue('PAYFAST_MODE', 'test'))
+      return false;
+    return true;
     }
 
     /**
@@ -82,111 +82,112 @@ class PayFast extends PaymentModule
     function uninstall()
     {
         return (parent::uninstall() AND Configuration::deleteByName('PAYFAST_MERCHANT_ID') AND Configuration::deleteByName('PAYFAST_MERCHANT_KEY') AND
-		Configuration::deleteByName('PAYFAST_MODE') AND Configuration::deleteByName('PAYFAST_LOGS'));
+    Configuration::deleteByName('PAYFAST_MODE') AND Configuration::deleteByName('PAYFAST_LOGS'));
     }
-	
+  
     /**
      * getContent
      *
      * Handles the administration area configuration
      */
-	function getContent()
-	{
-		global $currentIndex, $cookie;
-		
-		if( Tools::isSubmit( 'submitPayfast' ) )
-		{
-			$errors = array();
-			if( $mode = ( Tools::getValue( 'payfast_mode' ) == 'live' ? 'live' : 'test' ) )
-				Configuration::updateValue( 'PAYFAST_MODE', $mode );
+  function getContent()
+  {
+    global $currentIndex, $cookie;
+    
+    if( Tools::isSubmit( 'submitPayfast' ) )
+    {
+      $errors = array();
+      if( $mode = ( Tools::getValue( 'payfast_mode' ) == 'live' ? 'live' : 'test' ) )
+        Configuration::updateValue( 'PAYFAST_MODE', $mode );
             
             if( $mode != 'test' )
             {
-    			if( ( $merchant_id = Tools::getValue( 'payfast_merchant_id' ) ) AND preg_match('/[0-9]/', $merchant_id ) )
-    				Configuration::updateValue( 'PAYFAST_MERCHANT_ID', $merchant_id );
-    			else
-    				$errors[] = '<div class="warning warn"><h3>'.$this->l( 'Merchant ID seems to be wrong' ).'</h3></div>';
-    			
+          if( ( $merchant_id = Tools::getValue( 'payfast_merchant_id' ) ) AND preg_match('/[0-9]/', $merchant_id ) )
+            Configuration::updateValue( 'PAYFAST_MERCHANT_ID', $merchant_id );
+          else
+            $errors[] = '<div class="warning warn"><h3>'.$this->l( 'Merchant ID seems to be wrong' ).'</h3></div>';
+          
                 if( ( $merchant_key = Tools::getValue( 'payfast_merchant_key' ) ) AND preg_match('/[a-zA-Z0-9]/', $merchant_key ) )
-    				Configuration::updateValue( 'PAYFAST_MERCHANT_KEY', $merchant_key );
-    			else
-    				$errors[] = '<div class="warning warn"><h3>'.$this->l( 'Merchant key seems to be wrong' ).'</h3></div>';
+            Configuration::updateValue( 'PAYFAST_MERCHANT_KEY', $merchant_key );
+          else
+            $errors[] = '<div class="warning warn"><h3>'.$this->l( 'Merchant key seems to be wrong' ).'</h3></div>';
             }
-			
+      
             if( Tools::getValue( 'payfast_logs' ) )
-				Configuration::updateValue( 'PAYFAST_LOGS', 1 );
-			else
-				Configuration::updateValue( 'PAYFAST_LOGS', 0 );
-			
+        Configuration::updateValue( 'PAYFAST_LOGS', 1 );
+      else
+        Configuration::updateValue( 'PAYFAST_LOGS', 0 );
+      
             if( !sizeof( $errors ) )
-				Tools::redirectAdmin( $currentIndex.'&configure=payfast&token='.Tools::getValue( 'token' ) .'&conf=4' );
-			foreach( $errors as $error )
-				echo $error;
-		}
-		
-		$html = '<h2>'.$this->displayName.'</h2>
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
-			<fieldset>
-			<legend><img src="'.__PS_BASE_URI__.'modules/payfast/logo.gif" />'.$this->l('Settings').'</legend>
-				<p>'.$this->l('Use the "Test" mode to test out the module then you can use the "Live" mode if no problems arise. Remember to insert your merchant key and ID for the live mode.').'</p>
-				<label>
-					'.$this->l('Mode').'
-				</label>
-				<div class="margin-form">
-					<select name="payfast_mode">
-						<option value="live"'.(Configuration::get('PAYFAST_MODE') == 'live' ? ' selected="selected"' : '').'>'.$this->l('Live').'&nbsp;&nbsp;</option>
-						<option value="test"'.(Configuration::get('PAYFAST_MODE') == 'test' ? ' selected="selected"' : '').'>'.$this->l('Test').'&nbsp;&nbsp;</option>
-					</select>
-				</div>
-				<p>'.$this->l('You can find your ID and Key in your PayFast account > My Account > Integration.').'</p>
-				<label>
-					'.$this->l('Merchant ID').'
-				</label>
-				<div class="margin-form">
-					<input type="text" name="payfast_merchant_id" value="'.Tools::getValue('payfast_merchant_id', Configuration::get('PAYFAST_MERCHANT_ID')).'" />
-				</div>
-				<label>
-					'.$this->l('Merchant Key').'
-				</label>
-				<div class="margin-form">
-					<input type="text" name="payfast_merchant_key" value="'.Tools::getValue('payfast_merchant_key', Configuration::get('PAYFAST_MERCHANT_KEY')).'" />
-				</div>
-				<p>'.$this->l('You can log the server-to-server communication. The log file for debugging can be found at ').' '.__PS_BASE_URI__.'modules/payfast/payfastdebug.log. '.$this->l('If activated, be sure to protect it by putting a .htaccess file in the same directory. If not, the file will be readable by everyone.').'</p>				
-				<label>
-					'.$this->l('Debug').'
-				</label>
-				<div class="margin-form" style="margin-top:5px">
-					<input type="checkbox" name="payfast_logs"'.(Tools::getValue('payfast_logs', Configuration::get('PAYFAST_LOGS')) ? ' checked="checked"' : '').' />
-				</div>
-				<div class="clear center"><input type="submit" name="submitPayfast" class="button" value="'.$this->l('   Save   ').'" /></div>
-			</fieldset>
-		</form>
-		<br /><br />
-		<fieldset>
-			<legend><img src="../img/admin/warning.gif" />'.$this->l('Information').'</legend>
-			<p>- '.$this->l('In order to use your PayFast module, you must insert your PayFast Merchant ID and Merchant Key above.').'</p>
-			<p>- '.$this->l('Any orders in currencies other than ZAR will be converted by PayFast upon payment.').'<p>
-		</fieldset>';
-		
-		return $html;
-	}
+        Tools::redirectAdmin( $currentIndex.'&configure=payfast&token='.Tools::getValue( 'token' ) .'&conf=4' );
+      foreach( $errors as $error )
+        echo $error;
+    }
+    
+    $html = '<h2>'.$this->displayName.'</h2>
+    <form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+      <fieldset>
+      <legend><img src="'.__PS_BASE_URI__.'modules/payfast/logo.gif" />'.$this->l('Settings').'</legend>
+        <p>'.$this->l('Use the "Test" mode to test out the module then you can use the "Live" mode if no problems arise. Remember to insert your merchant key and ID for the live mode.').'</p>
+        <label>
+          '.$this->l('Mode').'
+        </label>
+        <div class="margin-form">
+          <select name="payfast_mode">
+            <option value="live"'.(Configuration::get('PAYFAST_MODE') == 'live' ? ' selected="selected"' : '').'>'.$this->l('Live').'&nbsp;&nbsp;</option>
+            <option value="test"'.(Configuration::get('PAYFAST_MODE') == 'test' ? ' selected="selected"' : '').'>'.$this->l('Test').'&nbsp;&nbsp;</option>
+          </select>
+        </div>
+        <p>'.$this->l('You can find your ID and Key in your PayFast account > My Account > Integration.').'</p>
+        <label>
+          '.$this->l('Merchant ID').'
+        </label>
+        <div class="margin-form">
+          <input type="text" name="payfast_merchant_id" value="'.Tools::getValue('payfast_merchant_id', Configuration::get('PAYFAST_MERCHANT_ID')).'" />
+        </div>
+        <label>
+          '.$this->l('Merchant Key').'
+        </label>
+        <div class="margin-form">
+          <input type="text" name="payfast_merchant_key" value="'.trim(Tools::getValue('payfast_merchant_key', Configuration::get('PAYFAST_MERCHANT_KEY'))).'" />
+        </div>
+        <p>'.$this->l('You can log the server-to-server communication. The log file for debugging can be found at ').' '.__PS_BASE_URI__.'modules/payfast/payfastdebug.log. '.$this->l('If activated, be sure to protect it by putting a .htaccess file in the same directory. If not, the file will be readable by everyone.').'</p>       
+        <label>
+          '.$this->l('Debug').'
+        </label>
+        <div class="margin-form" style="margin-top:5px">
+          <input type="checkbox" name="payfast_logs"'.(Tools::getValue('payfast_logs', Configuration::get('PAYFAST_LOGS')) ? ' checked="checked"' : '').' />
+        </div>
+        <div class="clear center"><input type="submit" name="submitPayfast" class="button" value="'.$this->l('   Save   ').'" /></div>
+      </fieldset>
+    </form>
+    <br /><br />
+    <fieldset>
+      <legend><img src="../img/admin/warning.gif" />'.$this->l('Information').'</legend>
+      <p>- '.$this->l('In order to use your PayFast module, you must insert your PayFast Merchant ID and Merchant Key above.').'</p>
+      <p>- '.$this->l('Any orders in currencies other than ZAR will be converted by prestashop prior to be sent to the PayFast payment gateway.').'<p>
+      <p>- '.$this->l('It is possible to setup an automatic currency rate update using crontab. You will simply have to create a cron job with currency update link available at the bottom of "Currencies" section.').'<p>
+    </fieldset>';
+    
+    return $html;
+  }
 
     /**
      * hookPayment
      *
      * Payment hook
      */
-	function hookPayment($params)
-	{
-		if (!$this->active)
-			return;
+  function hookPayment($params)
+  {
+    if (!$this->active)
+      return;
 
-		global $smarty;
-		
-		$smarty->assign('buttonText', $this->l('Pay with PayFast'));
-		return $this->display(__FILE__, 'payfast_payment.tpl');
-	}
-	
+    global $smarty;
+    
+    $smarty->assign('buttonText', $this->l('Pay with PayFast'));
+    return $this->display(__FILE__, 'payfast_payment.tpl');
+  }
+  
     /**
      * hookPaymentReturn
      *
@@ -194,12 +195,12 @@ class PayFast extends PaymentModule
      */
     function hookPaymentReturn($params)
     {
-		if (!$this->active)
-			return;
+    if (!$this->active)
+      return;
 
         $test = __FILE__;
 
-		return $this->display($test, 'payfast_success.tpl');
+    return $this->display($test, 'payfast_success.tpl');
     }
     
     /**
@@ -210,32 +211,37 @@ class PayFast extends PaymentModule
     function preparePayment()
     {
         // Variable declaration
-    	global $smarty, $cart, $cookie;
+      global $smarty, $cart, $cookie;
         $pfAmount = 0;
         $pfDescription = '';
         $pfOutput = '';
-    
+  
         // Lookup the currency codes and local price
-		$currency = $this->getCurrency((int)$cart->id_currency);
-		if ($cart->id_currency != $currency->id)
-		{
-            // If PayFast currency differs from local currency
-        	$cart->id_currency = (int)$currency->id;
-			$cookie->id_currency = (int)$cart->id_currency;
-			$cart->update();
-			Tools::redirect('modules/'.$this->name.'/payment.php');
-		}
+    $currency = $this->getCurrency((int)$cart->id_currency);
+    if ($cart->id_currency != $currency->id)
+    {
+       $url = $smarty->tpl_vars['base_uri']->value.'modules/'.$this->name.'/payment.php';
+      
+      // If PayFast currency differs from local currency
+      $cart->id_currency = (int)$currency->id;
+      $cookie->id_currency = (int)$cart->id_currency;
+      $cart->update();
+      //Tools::redirect('modules/'.$this->name.'/payment.php');
+
+      header('Location: '.$url);
+      exit;
+    }
 
         $pf_curr_code = 'ZAR';
     
         // Set default currency
         if( $pf_curr_code == '' )
-        	$pf_curr_code = 'ZAR';
+          $pf_curr_code = 'ZAR';
     
         // Convert from the currency of the users shopping cart to the currency
         // which the user has specified in their payfast preferences.
     
-    	$total = $cart->getOrderTotal();
+      $total = $cart->getOrderTotal();
         $pfAmount = $total;
 
         // Use appropriate merchant identifiers
@@ -269,9 +275,9 @@ class PayFast extends PaymentModule
             'notify_url' => $notifyUrl,
     
             // Item details
-        	'item_name' => Configuration::get('PS_SHOP_NAME') .' purchase, Order #'. $cart->id,
-        	'item_description' => $pfDescription,
-        	'amount' => number_format( sprintf( "%01.2f", $pfAmount ), 2, '.', '' ),
+          'item_name' => Configuration::get('PS_SHOP_NAME') .' purchase, Order #'. $cart->id,
+          'item_description' => $pfDescription,
+          'amount' => number_format( sprintf( "%01.2f", $pfAmount ), 2, '.', '' ),
             'm_payment_id' => $cart->id,
             'currency_code' => $pf_curr_code,
             'custom_str1' => $cart->secure_key,
@@ -294,12 +300,12 @@ class PayFast extends PaymentModule
         $pfOutput = substr( $pfOutput, 0, -1 );
     
         // Display debugging information (if in debug mode)
-    	if( Configuration::get('PAYFAST_MODE') == 'test' )
+      if( Configuration::get('PAYFAST_MODE') == 'test' )
         {
-          	echo "<a href='". $payfast_url ."?". $pfOutput ."'>Test the URL here</a>";
-          	echo "<pre>". print_r( $data, true ) ."</pre>";
-          	exit();
-    	}
+            echo "<a href='". $payfast_url ."?". $pfOutput ."'>Test the URL here</a>";
+            echo "<pre>". print_r( $data, true ) ."</pre>";
+            exit();
+      }
     
         // Send to PayFast (GET)
         header( "Location: ". $payfast_url ."?". $pfOutput );
