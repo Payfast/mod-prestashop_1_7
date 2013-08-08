@@ -36,7 +36,7 @@ if( ( $_GET['itn_request'] == 'true' ) )
     $pfErrMsg = '';
     $pfDone = false;
     $pfData = array();
-    $pfHost = ( ( Configuration::get('PAYFAST_MODE') == 'live' ) ? 'www' : 'sandbox' ) . '.payfast.co.za';
+    $pfHost = ( ( Configuration::get('PAYFAST_MODE') == 'live' ) ? '' : 'sandbox' ) . 'payfast.local';
     $pfOrderId = '';
     $pfParamString = '';
     
@@ -149,35 +149,35 @@ if( ( $_GET['itn_request'] == 'true' ) )
         if (empty(Context::getContext()->link))
         Context::getContext()->link = new Link();
 
-		switch( $pfData['payment_status'] )
+        switch( $pfData['payment_status'] )
         {
             case 'COMPLETE':
                 pflog( '- Complete' );
 
                 // Update the purchase status
                 $payfast->validateOrder((int)$pfData['custom_int1'], _PS_OS_PAYMENT_, (float)$pfData['amount_gross'], 
-				    $payfast->displayName, NULL, array(), NULL, false, $pfData['custom_str1']);
+                    $payfast->displayName, NULL, array('transaction_id'=>$transaction_id), NULL, false, $pfData['custom_str1']);
                 
                 break;
 
-			case 'FAILED':
+            case 'FAILED':
                 pflog( '- Failed' );
 
                 // If payment fails, delete the purchase log
                 $payfast->validateOrder((int)$pfData['custom_int1'], _PS_OS_ERROR_, (float)$pfData['amount'], 
-				    $payfast->displayName, NULL, array(), NULL, false, $pfData['custom_str1']);
+                    $payfast->displayName, NULL,array('transaction_id'=>$transaction_id), NULL, false, $pfData['custom_str1']);
 
-    			break;
+                break;
 
-			case 'PENDING':
+            case 'PENDING':
                 pflog( '- Pending' );
 
                 // Need to wait for "Completed" before processing
-    			break;
+                break;
 
-			default:
+            default:
                 // If unknown status, do nothing (safest course of action)
-			break;
+            break;
         }
     }
 
@@ -189,5 +189,5 @@ if( ( $_GET['itn_request'] == 'true' ) )
 
     // Close log
     pflog( '', true );
-	exit();
+    exit();
 }
