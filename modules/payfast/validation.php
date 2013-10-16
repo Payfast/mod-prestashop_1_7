@@ -36,7 +36,7 @@ if( ( $_GET['itn_request'] == 'true' ) )
     $pfErrMsg = '';
     $pfDone = false;
     $pfData = array();
-    $pfHost = ( ( Configuration::get('PAYFAST_MODE') == 'live' ) ? '' : 'sandbox' ) . 'payfast.local';
+    $pfHost = ( ( Configuration::get('PAYFAST_MODE') == 'live' ) ? '' : 'sandbox.' ) . 'payfast.co.za';
     $pfOrderId = '';
     $pfParamString = '';
     
