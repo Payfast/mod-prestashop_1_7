@@ -255,13 +255,15 @@ class PayFast extends PaymentModule
         // Sandbox
         else
         {
-            $merchantId = '10000100';
-            $merchantKey = '46f0cd694581a'; 
+            $merchantId = SANDBOX_MERCHANT_ID;
+            $merchantKey = SANDBOX_MERCHANT_KEY; 
             $payfast_url = 'https://sandbox.payfast.co.za/eng/process';
         }
         
         // Create URLs
-        $returnUrl = Tools::getShopDomain(true, true).__PS_BASE_URI__.'order-confirmation.php?key='.$cart->secure_key.'&id_cart='.(int)($cart->id).'&id_module='.(int)($this->id);
+        $returnUrl = Tools::getShopDomain(true, true).__PS_BASE_URI__.'index.php?controller=order-confirmation?key='.$cart->secure_key.'&id_cart='.(int)($cart->id).'&id_module='.(int)($this->id);
+        // this method is deprecated in 1.5 and will be removed in 1.6
+        // $returnUrl = Tools::getShopDomain(true, true).__PS_BASE_URI__.'order-confirmation.php?key='.$cart->secure_key.'&id_cart='.(int)($cart->id).'&id_module='.(int)($this->id);
         $cancelUrl = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__. 'order.php';
         $notifyUrl = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__. 'modules/payfast/validation.php' .'?itn_request=true';
     
