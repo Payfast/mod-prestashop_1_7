@@ -25,8 +25,8 @@
 define( 'PF_SOFTWARE_NAME', 'PrestaShop' );
 define( 'PF_SOFTWARE_VER', Configuration::get('PS_INSTALL_VERSION') );
 define( 'PF_MODULE_NAME', 'PayFast-Prestashop' );
-define( 'PF_MODULE_VER', '1.00' );
-define( 'PF_DEBUG', ( Configuration::get('PAYFAST_MODE') == 'test'  ? true : false ) );
+define( 'PF_MODULE_VER', '1.1' );
+define( 'PF_DEBUG', ( Configuration::get('PAYFAST_LOGS')  ? true : false ) );
 
 // Features
 // - PHP
@@ -151,7 +151,7 @@ function pfValidSignature( $pfData = null, &$pfParamString = null )
     // Dump the submitted variables and calculate security signature
     foreach( $pfData as $key => $val )
     {
-    	if( $key != 'signature' )
+        if( $key != 'signature' )
         {
             $pfParamString .= $key .'='. urlencode( $val ) .'&';
         }
@@ -225,7 +225,7 @@ function pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', $pfPro
          
         // Construct Header
         $header = "POST /eng/query/validate HTTP/1.0\r\n";
-       	$header .= "Host: ". $pfHost ."\r\n";
+        $header .= "Host: ". $pfHost ."\r\n";
         $header .= "User-Agent: ". PF_USER_AGENT ."\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
         $header .= "Content-Length: " . strlen( $pfParamString ) . "\r\n\r\n";
