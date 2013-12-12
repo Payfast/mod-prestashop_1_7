@@ -1,6 +1,6 @@
-PayFast PrestaShop Module v1.0.1 for PrestaShop v1.5
+PayFast PrestaShop Module v2.0.0 for PrestaShop v1.5.* and v1.6.*
 -------------------------------------------------------
-Copyright (c) 2011 PayFast (Pty) Ltd
+Copyright (c) 2013 PayFast (Pty) Ltd
 
 LICENSE:
  
@@ -22,6 +22,6 @@ General Public License.
 *                                                                            *
 *    Please see the URL below for all information concerning this module:    *
 *                                                                            *
-*                 http://www.payfast.co.za/help/prestashop                   *
+*              http://www.payfast.co.za/developers/prestashop                *
 *                                                                            *
 ******************************************************************************
