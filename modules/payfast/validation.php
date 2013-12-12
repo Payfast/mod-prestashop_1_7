@@ -17,7 +17,13 @@
  * License for more details.
  * 
  * @author     Jonathan Page
- * @copyright  2011 PayFast (Pty) Ltd
+ * @version    1.0.0
+ *
+ * @author     Ron Darby <ron.darby@payfast.co.za>
+ * @version    1.1.0
+ * @date       12/12/2013
+ * 
+ * @copyright  2013 PayFast (Pty) Ltd
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link       http://www.payfast.co.za/help/prestashop
  */
@@ -97,7 +103,7 @@ if( ( $_GET['itn_request'] == 'true' ) )
     if( !$pfError && !$pfDone )
     {
         // Get order data
-        $cart = new Cart((int) $pfData['custom_int1']);
+        $cart = new Cart((int) $pfData['m_payment_id']);
 
         pflog( "Purchase:\n". print_r( $cart, true )  );
     }
@@ -120,10 +126,23 @@ if( ( $_GET['itn_request'] == 'true' ) )
     if( !$pfError && !$pfDone )
     {
        // pflog( 'Check data against internal order' );
-
+        $toCurrency = new Currency(Currency::getIdByIsoCode('ZAR'));
+        $fromCurrency = new Currency((int)$cart->id_currency);
+        
+        $total = $cart->getOrderTotal();
+   
+        //if( $currency->decimals )
+        //{
+             $total = Tools::convertPriceFull( $total, $fromCurrency, $toCurrency );
+        //}
+        //else
+        //{
+        //    $total = Tools::ps_round(Tools::convertPriceFull( $total, $fromCurrency, $toCurrency ));
+        //}
         // Check order amount
-        if( !pfAmountsEqual( $pfData['amount_gross'], $cart->getOrderTotal() ) )
+        if( !pfAmountsEqual( $pfData['amount_gross'], $total) )
         {
+            pflog( 'Amount Returned: '.$pfData['amount_gross']."\n Amount in Cart:".$total );
             $pfError = true;
             $pfErrMsg = PF_ERR_AMOUNT_MISMATCH;
         }
@@ -155,7 +174,7 @@ if( ( $_GET['itn_request'] == 'true' ) )
                 pflog( '- Complete' );
 
                 // Update the purchase status
-                $payfast->validateOrder((int)$pfData['custom_int1'], _PS_OS_PAYMENT_, (float)$pfData['amount_gross'], 
+                $payfast->validateOrder((int)$pfData['custom_int1'], _PS_OS_PAYMENT_, (float)$cart->getOrderTotal() , 
                     $payfast->displayName, NULL, array('transaction_id'=>$transaction_id), NULL, false, $pfData['custom_str1']);
                 
                 break;
@@ -164,7 +183,7 @@ if( ( $_GET['itn_request'] == 'true' ) )
                 pflog( '- Failed' );
 
                 // If payment fails, delete the purchase log
-                $payfast->validateOrder((int)$pfData['custom_int1'], _PS_OS_ERROR_, (float)$pfData['amount'], 
+                $payfast->validateOrder((int)$pfData['custom_int1'], _PS_OS_ERROR_, (float)$cart->getOrderTotal() , 
                     $payfast->displayName, NULL,array('transaction_id'=>$transaction_id), NULL, false, $pfData['custom_str1']);
 
                 break;

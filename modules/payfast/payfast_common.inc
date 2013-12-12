@@ -25,7 +25,7 @@
 define( 'PF_SOFTWARE_NAME', 'PrestaShop' );
 define( 'PF_SOFTWARE_VER', Configuration::get('PS_INSTALL_VERSION') );
 define( 'PF_MODULE_NAME', 'PayFast-Prestashop' );
-define( 'PF_MODULE_VER', '1.1' );
+define( 'PF_MODULE_VER', '2.0.0' );
 define( 'PF_DEBUG', ( Configuration::get('PAYFAST_LOGS')  ? true : false ) );
 
 // Features
@@ -76,7 +76,7 @@ define( 'PF_MSG_PENDING',
     ' Transaction Notification when the payment status changes to'.
     ' "Completed", or "Failed"' );
 
-// {{{ pfLog
+
 /**
  * pflog
  *
@@ -117,8 +117,7 @@ function pflog( $msg = '', $close = false )
         }
     }
 }
-// }}}
-// {{{ pfGetData
+
 /**
  * pfGetData
  *  
@@ -139,8 +138,7 @@ function pfGetData()
     else
         return( $pfData );
 }
-// }}}
-// {{{ pfValidSignature
+
 /**
  * pfValidSignature
  * 
@@ -171,8 +169,7 @@ function pfValidSignature( $pfData = null, &$pfParamString = null )
 
     return( $result );
 }
-// }}}
-// {{{ pfValidData
+
 /**
  * pfValidData
  *
