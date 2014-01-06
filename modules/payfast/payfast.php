@@ -177,8 +177,11 @@ class PayFast extends PaymentModule
                 $this->registerHook('displayRightColumn'); 
              else if (Tools::getValue('logo_position') == self::FOOTER)
                 $this->registerHook('displayFooter'); 
+            if( method_exists ('Tools','clearSmartyCache') )
+            {
+                Tools::clearSmartyCache();
+            } 
             
-            Tools::clearSmartyCache();
         }      
         
        
