@@ -156,7 +156,7 @@ class PayFast extends PaymentModule
 
                 if( !sizeof( $errors ) )
                 {
-                    Tools::redirectAdmin( $currentIndex.'&configure=payfast&token='.Tools::getValue( 'token' ) .'&conf=4' );
+                    //Tools::redirectAdmin( $currentIndex.'&configure=payfast&token='.Tools::getValue( 'token' ) .'&conf=4' );
                 }
                 
             }
