@@ -403,7 +403,7 @@ class PayFast extends PaymentModule
         $pfOutput = '';
         // Create output string
         foreach( ($data['info']) as $key => $val )
-            $pfOutput .= $key .'='. urlencode( $val ) .'&';
+            $pfOutput .= $key .'='. urlencode( trim( $val ) ) .'&';
     
         // Remove last ampersand
         $pfOutput = substr( $pfOutput, 0, -1 );
