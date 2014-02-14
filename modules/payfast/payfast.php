@@ -392,6 +392,7 @@ class PayFast extends PaymentModule
     
         $data['info']['name_first'] = $customer->firstname;
         $data['info']['name_last'] = $customer->lastname;
+        $data['info']['email_address'] = $customer->email;
         $data['info']['m_payment_id'] = $cart->id;
         $data['info']['amount'] = number_format( sprintf( "%01.2f", $pfAmount ), 2, '.', '' );
         $data['info']['item_name'] = Configuration::get('PS_SHOP_NAME') .' purchase, Order #'. $cart->id; 
