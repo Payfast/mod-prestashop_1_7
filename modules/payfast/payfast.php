@@ -41,7 +41,7 @@ class PayFast extends PaymentModule
     {
         $this->name = 'payfast';
         $this->tab = 'payments_gateways';
-        $this->version = '2.0.0';  
+        $this->version = '2.0.1';  
         $this->currencies = true;
         $this->currencies_mode = 'radio';
         
@@ -395,7 +395,7 @@ class PayFast extends PaymentModule
         $data['info']['email_address'] = $customer->email;
         $data['info']['m_payment_id'] = $cart->id;
         $data['info']['amount'] = number_format( sprintf( "%01.2f", $pfAmount ), 2, '.', '' );
-        $data['info']['item_name'] = Configuration::get('PS_SHOP_NAME') .' purchase, Order #'. $cart->id; 
+        $data['info']['item_name'] = Configuration::get('PS_SHOP_NAME') .' purchase, Cart Item ID #'. $cart->id; 
         $data['info']['custom_int1'] = $cart->id;       
         $data['info']['custom_str1'] = $cart->secure_key;           
             
