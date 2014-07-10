@@ -420,7 +420,7 @@ class PayFast extends PaymentModule
             $pfOutput .= $key .'='. urlencode( trim( $val ) ) .'&';
     
         $passPhrase = Configuration::get( 'PAYFAST_PASSPHRASE' );
-        if( empty( $passPhrase ) )
+        if( empty( $passPhrase ) ||  Configuration::get('PAYFAST_MODE') != 'live' )
         {
             $pfOutput = substr( $pfOutput, 0, -1 );
         }

@@ -159,7 +159,7 @@ function pfValidSignature( $pfData = null, &$pfParamString = null, $pfPassphrase
         }
     }
 
-    if( is_null( $pfPassphrase ) )
+    if( is_null( $pfPassphrase ) ||  Configuration::get('PAYFAST_MODE') != 'live' )
     {
         $pfParamString = substr( $pfParamString, 0, -1 );
     }
@@ -167,7 +167,7 @@ function pfValidSignature( $pfData = null, &$pfParamString = null, $pfPassphrase
     {
         $pfParamString = $pfParamString."passphrase=".$pfPassphrase;
     }
-    
+
     $signature = md5( $pfParamString );
     
     $result = ( $pfData['signature'] == $signature );
