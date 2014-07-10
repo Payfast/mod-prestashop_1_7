@@ -1,4 +1,4 @@
-PayFast PrestaShop Module v2.0.0 for PrestaShop v1.5.* and v1.6.*
+PayFast PrestaShop Module v2.1.0 for PrestaShop v1.5.* and v1.6.*
 -------------------------------------------------------
 Copyright (c) 2013 PayFast (Pty) Ltd
 
