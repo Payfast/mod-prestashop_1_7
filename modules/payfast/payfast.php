@@ -419,8 +419,15 @@ class PayFast extends PaymentModule
         foreach( ($data['info']) as $key => $val )
             $pfOutput .= $key .'='. urlencode( trim( $val ) ) .'&';
     
-        // Remove last ampersand
-        $pfOutput = substr( $pfOutput, 0, -1 );
+        $passPhrase = Configuration::get( 'PAYFAST_PASSPHRASE' );
+        if( empty( $passPhrase ) )
+        {
+            $pfOutput = substr( $pfOutput, 0, -1 );
+        }
+        else
+        {
+            $pfOutput = $pfOutput."passphrase=".$passPhrase;
+        }
 
         $data['info']['signature'] = md5( $pfOutput );    
        
