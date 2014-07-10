@@ -17,7 +17,7 @@
  * License for more details.
  * 
  * @author     Ron Darby<ron.darby@payfast.co.za>
- * @version    2.0.0
+ * @version    2.1.0
  * @date       12/12/2013
  * 
  * @copyright  2013 PayFast (Pty) Ltd
@@ -41,7 +41,7 @@ class PayFast extends PaymentModule
     {
         $this->name = 'payfast';
         $this->tab = 'payments_gateways';
-        $this->version = '2.0.1';  
+        $this->version = '2.1.0';  
         $this->currencies = true;
         $this->currencies_mode = 'radio';
         
@@ -82,7 +82,8 @@ class PayFast extends PaymentModule
             OR !Configuration::updateValue('PAYFAST_MODE', 'test')
             OR !Configuration::updateValue('PAYFAST_PAYNOW_TEXT', 'Pay Now With')
             OR !Configuration::updateValue('PAYFAST_PAYNOW_LOGO', 'on')  
-            OR !Configuration::updateValue('PAYFAST_PAYNOW_ALIGN', 'right')  )
+            OR !Configuration::updateValue('PAYFAST_PAYNOW_ALIGN', 'right')
+            OR !Configuration::updateValue('PAYFAST_PASSPHRASE', '')  )
         {            
             return false;
         }
@@ -102,6 +103,7 @@ class PayFast extends PaymentModule
             AND Configuration::deleteByName('PAYFAST_PAYNOW_TEXT') 
             AND Configuration::deleteByName('PAYFAST_PAYNOW_LOGO')            
             AND Configuration::deleteByName('PAYFAST_PAYNOW_ALIGN')
+            AND Configuration::deleteByName('PAYFAST_PASSPHRASE')
             );
 
     }
@@ -130,6 +132,10 @@ class PayFast extends PaymentModule
             if( $paynow_align =  Tools::getValue( 'payfast_paynow_align' ) )
             {
                  Configuration::updateValue( 'PAYFAST_PAYNOW_ALIGN', $paynow_align );
+            }
+            if( $passPhrase =  Tools::getValue( 'payfast_passphrase' ) )
+            {
+                 Configuration::updateValue( 'PAYFAST_PASSPHRASE', $passPhrase );
             }
             
             $mode = ( Tools::getValue( 'payfast_mode' ) == 'live' ? 'live' : 'test' ) ;
@@ -248,6 +254,13 @@ class PayFast extends PaymentModule
             </label>
             <div class="margin-form">
               <input type="text" name="payfast_merchant_key" value="'.trim(Tools::getValue('payfast_merchant_key', Configuration::get('PAYFAST_MERCHANT_KEY'))).'" />
+            </div> 
+            <p>'.$this->l('ONLY INSERT A VALUE INTO THE SECURE PASSPHRASE IF YOU HAVE SET THIS ON THE INTEGRATION PAGE OF THE LOGGED IN AREA OF THE PAYFAST WEBSITE!!!!!').'</p>'.           
+            '<label>
+              '.$this->l('Secure Passphrase').'
+            </label>
+            <div class="margin-form">
+              <input type="text" name="payfast_passphrase" value="'.trim(Tools::getValue('payfast_passphrase', Configuration::get('PAYFAST_PASSPHRASE'))).'" />
             </div>
             <p>'.$this->l('You can log the server-to-server communication. The log file for debugging can be found at ').' '.__PS_BASE_URI__.'modules/payfast/payfast.log. '.$this->l('If activated, be sure to protect it by putting a .htaccess file in the same directory. If not, the file will be readable by everyone.').'</p>       
             <label>

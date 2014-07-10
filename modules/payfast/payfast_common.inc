@@ -25,7 +25,7 @@
 define( 'PF_SOFTWARE_NAME', 'PrestaShop' );
 define( 'PF_SOFTWARE_VER', Configuration::get('PS_INSTALL_VERSION') );
 define( 'PF_MODULE_NAME', 'PayFast-Prestashop' );
-define( 'PF_MODULE_VER', '2.0.0' );
+define( 'PF_MODULE_VER', '2.1.0' );
 define( 'PF_DEBUG', ( Configuration::get('PAYFAST_LOGS')  ? true : false ) );
 
 // Features
@@ -144,7 +144,7 @@ function pfGetData()
  * 
  * @author Jonathan Smit
  */
-function pfValidSignature( $pfData = null, &$pfParamString = null )
+function pfValidSignature( $pfData = null, &$pfParamString = null, $pfPassphrase=null )
 {
     // Dump the submitted variables and calculate security signature
     foreach( $pfData as $key => $val )
@@ -159,8 +159,15 @@ function pfValidSignature( $pfData = null, &$pfParamString = null )
         }
     }
 
-    // Remove the last '&' from the parameter string
-    $pfParamString = substr( $pfParamString, 0, -1 );
+    if( is_null( $pfPassphrase ) )
+    {
+        $pfParamString = substr( $pfParamString, 0, -1 );
+    }
+    else
+    {
+        $pfParamString = $pfParamString."passphrase=".$pfPassphrase;
+    }
+    
     $signature = md5( $pfParamString );
     
     $result = ( $pfData['signature'] == $signature );

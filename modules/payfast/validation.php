@@ -20,7 +20,7 @@
  * @version    1.0.0
  *
  * @author     Ron Darby <ron.darby@payfast.co.za>
- * @version    1.1.0
+ * @version    2.1.0
  * @date       12/12/2013
  * 
  * @copyright  2013 PayFast (Pty) Ltd
@@ -78,9 +78,12 @@ if( ( $_GET['itn_request'] == 'true' ) )
     if( !$pfError && !$pfDone )
     {
         pflog( 'Verify security signature' );
-    
+
+        $passPhrase = Configuration::get( 'PAYFAST_PASSPHRASE' );
+        $pfPassPhrase = empty( $passPhrase ) ? null : $passPhrase; 
+        
         // If signature different, log for debugging
-        if( !pfValidSignature( $pfData, $pfParamString ) )
+        if( !pfValidSignature( $pfData, $pfParamString, $pfPassPhrase ) )
         {
             $pfError = true;
             $pfErrMsg = PF_ERR_INVALID_SIGNATURE;
