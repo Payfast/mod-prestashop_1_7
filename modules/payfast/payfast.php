@@ -426,7 +426,7 @@ class PayFast extends PaymentModule
         }
         else
         {
-            $pfOutput = $pfOutput."passphrase=".$passPhrase;
+            $pfOutput = $pfOutput."passphrase=".urlencode( $passPhrase );
         }
 
         $data['info']['signature'] = md5( $pfOutput );    

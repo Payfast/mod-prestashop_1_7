@@ -165,7 +165,7 @@ function pfValidSignature( $pfData = null, &$pfParamString = null, $pfPassphrase
     }
     else
     {
-        $pfParamString = $pfParamString."passphrase=".$pfPassphrase;
+        $pfParamString = $pfParamString."passphrase=".urlencode( $pfPassphrase );
     }
 
     $signature = md5( $pfParamString );
