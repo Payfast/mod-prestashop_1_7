@@ -41,7 +41,7 @@ class PayFast extends PaymentModule
     {
         $this->name = 'payfast';
         $this->tab = 'payments_gateways';
-        $this->version = '2.1.0';  
+        $this->version = '2.1.1';  
         $this->currencies = true;
         $this->currencies_mode = 'radio';
         
