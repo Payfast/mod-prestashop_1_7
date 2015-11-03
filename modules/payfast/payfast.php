@@ -429,7 +429,8 @@ class PayFast extends PaymentModule
             $pfOutput = $pfOutput."passphrase=".urlencode( $passPhrase );
         }
 
-        $data['info']['signature'] = md5( $pfOutput );    
+        $data['info']['signature'] = md5( $pfOutput );
+        $data['info']['user_agent'] = 'Prestashop 1.6';
        
         $this->context->smarty->assign( 'data', $data );        
   
