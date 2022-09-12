@@ -1,4 +1,4 @@
-PayFast PrestaShop Module v2.1.0 for PrestaShop v1.5.* and v1.6.*
+PayFast ThirtyBees Module v1...0 for ThirtyBees v1.*
 -------------------------------------------------------
 Copyright (c) 2008 PayFast (Pty) Ltd
 You (being anyone who is not PayFast (Pty) Ltd) may download and use this plugin / code in your own website in conjunction with a registered and active PayFast account. If your PayFast account is terminated for any reason, you may not use this plugin / code or part thereof.
@@ -6,7 +6,7 @@ Except as expressly indicated in this licence, you may not use, copy, modify or 
 
 INTEGRATION:
 1. Unzip the module to a temporary location on your computer
-2. Copy the “modules” folder in the archive to your base “PrestaShop” folder
+2. Copy the “modules” folder in the archive to your base “ThirtyBees” folder
 - This should NOT overwrite any existing files or folders and merely supplement them with the PayFast files
 - This is however, dependent on the FTP program you use
 3. Using your FTP program, ensure that the /modules as well as /modules/payfast directories are set to CHMOD 0755, otherwise the validation script will not be accessible to set successful payments as paid.
