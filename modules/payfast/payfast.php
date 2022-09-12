@@ -7,8 +7,9 @@
  * Except as expressly indicated in this licence, you may not use, copy, modify or distribute this plugin / code or part thereof in any way.
  * 
  * @author     Ron Darby<ron.darby@payfast.co.za>
- * @version    2.1.0
- * @date       12/12/2013
+ * @Modified   Selwyn Orren<selwyn@linuxweb.co.za>
+ * @version    0.1.0
+ * @date       12/09/2022
  *
  * @link       http://www.payfast.co.za/help/prestashop
  */
@@ -24,6 +25,7 @@ class PayFast extends PaymentModule
     const DISABLE = -1;
     const SANDBOX_MERCHANT_KEY = '46f0cd694581a';
     const SANDBOX_MERCHANT_ID = '10000100';
+    const SANDBOX_PASSPHASE = 'jt7NOE43FZPn';
     
     public function __construct()
     {
@@ -68,7 +70,7 @@ class PayFast extends PaymentModule
             OR !Configuration::updateValue('PAYFAST_MERCHANT_KEY', '') 
             OR !Configuration::updateValue('PAYFAST_LOGS', '1') 
             OR !Configuration::updateValue('PAYFAST_MODE', 'test')
-            OR !Configuration::updateValue('PAYFAST_PAYNOW_TEXT', 'Pay Now With')
+            OR !Configuration::updateValue('PAYFAST_PAYNOW_TEXT', 'Pay now with PayFast (Debit Card, Credit Card and Instant EFT)')
             OR !Configuration::updateValue('PAYFAST_PAYNOW_LOGO', 'on')  
             OR !Configuration::updateValue('PAYFAST_PAYNOW_ALIGN', 'right')
             OR !Configuration::updateValue('PAYFAST_PASSPHRASE', '')  )
@@ -410,7 +412,7 @@ class PayFast extends PaymentModule
         $passPhrase = Configuration::get( 'PAYFAST_PASSPHRASE' );
         if( empty( $passPhrase ) ||  Configuration::get('PAYFAST_MODE') != 'live' )
         {
-            $pfOutput = substr( $pfOutput, 0, -1 );
+            $pfOutput = $pfOutput."passphrase=".self::SANDBOX_PASSPHASE;
         }
         else
         {
@@ -418,7 +420,7 @@ class PayFast extends PaymentModule
         }
 
         $data['info']['signature'] = md5( $pfOutput );
-        $data['info']['user_agent'] = 'Prestashop 1.6';
+        $data['info']['user_agent'] = 'ThirtyBees 1.3';
        
         $this->context->smarty->assign( 'data', $data );        
   
@@ -438,5 +440,3 @@ class PayFast extends PaymentModule
     }
    
 }
-
-
